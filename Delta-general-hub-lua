@@ -394,3 +394,44 @@ RunService.Stepped:Connect(function()
 		end
 	end
 end)
+-- ===== SISTEMA SIMPLES DE ABAS =====
+local tabs = {}
+local currentTab
+
+local function criarAba(nome, posX)
+    -- botão da aba
+    local btn = Instance.new("TextButton")
+    btn.Parent = main
+    btn.Size = UDim2.new(0,100,0,25)
+    btn.Position = UDim2.new(0,posX,0,35)
+    btn.Text = nome
+
+    -- frame da aba
+    local frame = Instance.new("Frame")
+    frame.Parent = main
+    frame.Size = UDim2.new(1,0,1,-70)
+    frame.Position = UDim2.new(0,0,0,65)
+    frame.BackgroundTransparency = 1
+    frame.Visible = false
+
+    btn.MouseButton1Click:Connect(function()
+        -- esconde aba anterior
+        if currentTab then
+            currentTab.Visible = false
+        end
+        frame.Visible = true
+        currentTab = frame
+    end)
+
+    tabs[nome] = frame
+    return frame
+end
+
+-- criando abas
+local tabPrincipal = criarAba("Principal", 10)
+local tabMovimento = criarAba("Movimento", 120)
+local tabVisual = criarAba("Visual", 230)
+
+-- aba inicial visível
+tabPrincipal.Visible = true
+currentTab = tabPrincipal
