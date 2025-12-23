@@ -60,3 +60,94 @@ menuBtn.MouseButton1Click:Connect(function()
         end
     end
 end)
+-- ===== ABAS =====
+local abasNomes = {"Principal", "Visual", "Movimento"} -- Você pode adicionar mais
+local tabsFrame = Instance.new("Frame")
+tabsFrame.Parent = main
+tabsFrame.Size = UDim2.new(0,400,0,30)
+tabsFrame.Position = UDim2.new(0,0,0,30)
+tabsFrame.BackgroundTransparency = 1
+
+-- Criar botões de abas
+for i, nome in ipairs(abasNomes) do
+    local btn = Instance.new("TextButton")
+    btn.Parent = tabsFrame
+    btn.Size = UDim2.new(0,120,1,0)
+    btn.Position = UDim2.new(0,(i-1)*130,0,0)
+    btn.Text = nome
+    btn.BackgroundColor3 = Color3.fromRGB(50,50,50)
+    btn.TextColor3 = Color3.fromRGB(255,255,255)
+
+    -- Criar frame da aba
+    local abaFrame = Instance.new("Frame")
+    abaFrame.Parent = main
+    abaFrame.Size = UDim2.new(1,0,1,-60)
+    abaFrame.Position = UDim2.new(0,0,0,60)
+    abaFrame.Visible = false
+    abaFrame.BackgroundTransparency = 1
+
+    tabs[nome] = abaFrame
+
+    -- Botão da aba ativa
+    btn.MouseButton1Click:Connect(function()
+        -- Ocultar todas
+        for _,f in pairs(tabs) do
+            f.Visible = false
+        end
+        abaFrame.Visible = true
+        currentTab = abaFrame
+    end)
+end
+
+-- ===== MINI MENU INVISIBILIDADE =====
+local miniInvisFrame = Instance.new("Frame")
+miniInvisFrame.Parent = gui
+miniInvisFrame.Size = UDim2.new(0,200,0,50)
+miniInvisFrame.Position = UDim2.new(0.5,-100,0.8,0)
+miniInvisFrame.Visible = false
+miniInvisFrame.BackgroundColor3 = Color3.fromRGB(30,30,30)
+
+local invisAxBtn = Instance.new("TextButton")
+invisAxBtn.Parent = miniInvisFrame
+invisAxBtn.Size = UDim2.new(0,80,0,25)
+invisAxBtn.Position = UDim2.new(0,10,0,10)
+invisAxBtn.Text = "AX"
+
+local invisBxBtn = Instance.new("TextButton")
+invisBxBtn.Parent = miniInvisFrame
+invisBxBtn.Size = UDim2.new(0,80,0,25)
+invisBxBtn.Position = UDim2.new(0,110,0,10)
+invisBxBtn.Text = "BX"
+
+local invisOn = false
+local savedCFrame
+
+-- Botão de ativar invisibilidade na aba "Visual"
+local invisBtn = Instance.new("TextButton")
+invisBtn.Parent = tabs["Visual"]
+invisBtn.Size = UDim2.new(0,150,0,25)
+invisBtn.Position = UDim2.new(0,10,0,10)
+invisBtn.Text = "Ativar Invisibilidade"
+
+invisBtn.MouseButton1Click:Connect(function()
+    invisOn = not invisOn
+    miniInvisFrame.Visible = invisOn
+
+    for _,v in pairs(char:GetDescendants()) do
+        if v:IsA("BasePart") then
+            v.Transparency = invisOn and 1 or 0
+        end
+    end
+end)
+
+invisAxBtn.MouseButton1Click:Connect(function()
+    if invisOn then
+        savedCFrame = root.CFrame
+    end
+end)
+
+invisBxBtn.MouseButton1Click:Connect(function()
+    if invisOn and savedCFrame then
+        root.CFrame = savedCFrame
+    end
+end)
