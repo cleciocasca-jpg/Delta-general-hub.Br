@@ -263,3 +263,36 @@ yesBtn.MouseButton1Click:Connect(function()
 
 	gui:Destroy()
 end)
+-- ===== MINI MENU FLUTUANTE =====
+local miniFrame = Instance.new("Frame")
+miniFrame.Parent = gui
+miniFrame.Size = UDim2.new(0,120,0,60)
+miniFrame.Position = UDim2.new(1,-140,0.5,-30)
+miniFrame.Active = true
+miniFrame.Draggable = true
+
+local miniOpen = Instance.new("TextButton")
+miniOpen.Parent = miniFrame
+miniOpen.Size = UDim2.new(1,0,0.5,0)
+miniOpen.Text = "ABRIR MENU"
+
+miniOpen.MouseButton1Click:Connect(function()
+	main.Visible = true
+end)
+
+local miniInvis = Instance.new("TextButton")
+miniInvis.Parent = miniFrame
+miniInvis.Position = UDim2.new(0,0,0.5,0)
+miniInvis.Size = UDim2.new(1,0,0.5,0)
+miniInvis.Text = "INVIS OFF"
+
+miniInvis.MouseButton1Click:Connect(function()
+	invisOn = not invisOn
+	miniInvis.Text = invisOn and "INVIS ON" or "INVIS OFF"
+
+	for _,v in pairs(char:GetDescendants()) do
+		if v:IsA("BasePart") then
+			v.Transparency = invisOn and 1 or 0
+		end
+	end
+end)
