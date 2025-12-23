@@ -68,3 +68,72 @@ titleCorner.Parent = title
 menuBtn.MouseButton1Click:Connect(function()
     main.Visible = not main.Visible
 end)
+-- ===== PARTE 2 — ABAS =====
+
+-- Tabela para armazenar abas
+local tabs = {}
+local currentTab = nil
+
+-- Nomes das abas
+local nomesAbas = {"Principal", "Movimento", "Visual"}
+
+-- Criar container de abas
+local tabsFrame = Instance.new("Frame")
+tabsFrame.Parent = main
+tabsFrame.Size = UDim2.new(0,main.Size.X.Offset,0,40)
+tabsFrame.Position = UDim2.new(0,0,0,40)
+tabsFrame.BackgroundTransparency = 1
+
+-- Criar abas
+local abaWidth = main.Size.X.Offset / #nomesAbas
+for i, nome in ipairs(nomesAbas) do
+    local aba = Instance.new("TextButton")
+    aba.Parent = tabsFrame
+    aba.Size = UDim2.new(0,abaWidth,0,40)
+    aba.Position = UDim2.new(0,(i-1)*abaWidth,0,0)
+    aba.Text = nome
+    aba.TextColor3 = Color3.new(1,1,1)
+    aba.BackgroundColor3 = Color3.fromRGB(50,50,50)
+    aba.BorderSizePixel = 0
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0,8)
+    corner.Parent = aba
+
+    -- Criar frame da aba
+    local abaFrame = Instance.new("Frame")
+    abaFrame.Parent = main
+    abaFrame.Size = UDim2.new(1,0,1,-80) -- desconta título e abas
+    abaFrame.Position = UDim2.new(0,0,0,80)
+    abaFrame.BackgroundTransparency = 1
+    abaFrame.Visible = false
+
+    tabs[nome] = abaFrame
+
+    -- Função ao clicar na aba
+    aba.MouseButton1Click:Connect(function()
+        -- Ocultar todas as abas
+        for _,f in pairs(tabs) do
+            f.Visible = false
+        end
+        -- Mostrar aba clicada
+        abaFrame.Visible = true
+        currentTab = abaFrame
+    end)
+
+    -- Efeito de hover simples
+    aba.MouseEnter:Connect(function()
+        aba.BackgroundColor3 = Color3.fromRGB(80,80,80)
+    end)
+    aba.MouseLeave:Connect(function()
+        if currentTab ~= abaFrame then
+            aba.BackgroundColor3 = Color3.fromRGB(50,50,50)
+        else
+            aba.BackgroundColor3 = Color3.fromRGB(70,70,70)
+        end
+    end)
+end
+
+-- Mostrar primeira aba por padrão
+tabs[nomesAbas[1]].Visible = true
+currentTab = tabs[nomesAbas[1]]
