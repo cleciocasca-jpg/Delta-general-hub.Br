@@ -97,3 +97,83 @@ closeBtn.MouseButton1Click:Connect(function()
     end
     humanoid.WalkSpeed = 18
 end)
+-- ===== SISTEMA DE ABAS / CATEGORIAS =====
+local tabs = {}
+local currentTab = nil
+
+-- Função para criar uma aba
+local function criarAba(nome, posX)
+    -- BOTÃO DA ABA
+    local btn = Instance.new("TextButton")
+    btn.Parent = main
+    btn.Size = UDim2.new(0,100,0,25)
+    btn.Position = UDim2.new(0,posX,0,35)
+    btn.Text = nome
+    btn.TextColor3 = Color3.new(1,1,1)
+    btn.BackgroundColor3 = Color3.fromRGB(50,50,50)
+    btn.BorderSizePixel = 0
+    btn.AutoButtonColor = true
+
+    -- FRAME DA ABA
+    local frame = Instance.new("Frame")
+    frame.Parent = main
+    frame.Size = UDim2.new(1,0,1,-70)
+    frame.Position = UDim2.new(0,0,0,65)
+    frame.BackgroundTransparency = 1
+    frame.Visible = false
+
+    -- Evento de clique no botão
+    btn.MouseButton1Click:Connect(function()
+        -- Esconde aba anterior
+        if currentTab then
+            currentTab.Visible = false
+        end
+        -- Mostra aba atual
+        frame.Visible = true
+        currentTab = frame
+
+        -- Muda cor do botão ativo
+        for _,v in pairs(main:GetChildren()) do
+            if v:IsA("TextButton") and tabs[v.Text] then
+                v.BackgroundColor3 = Color3.fromRGB(50,50,50)
+            end
+        end
+        btn.BackgroundColor3 = Color3.fromRGB(80,80,80)
+    end)
+
+    tabs[nome] = frame
+    return frame
+end  -- end da função criarAba
+
+-- ===== CRIANDO ABAS =====
+local tabPrincipal = criarAba("Principal", 10)
+local tabMovimento = criarAba("Movimento", 120)
+local tabVisual = criarAba("Visual", 230)
+
+-- DEFINIR ABA INICIAL
+tabPrincipal.Visible = true
+currentTab = tabPrincipal
+-- botão ativo inicial
+for _,v in pairs(main:GetChildren()) do
+    if v:IsA("TextButton") and v.Text == "Principal" then
+        v.BackgroundColor3 = Color3.fromRGB(80,80,80)
+    end
+end
+
+-- ===== FUNÇÃO AUXILIAR PARA CRIAR LABELS DE TESTE =====
+local function criarLabelTeste(parent, texto, yPos)
+    local label = Instance.new("TextLabel")
+    label.Parent = parent
+    label.Size = UDim2.new(0,200,0,30)
+    label.Position = UDim2.new(0,10,0,yPos)
+    label.Text = texto
+    label.TextScaled = true
+    label.TextColor3 = Color3.new(1,1,1)
+    label.BackgroundTransparency = 1
+    return label
+end
+
+-- TESTES
+criarLabelTeste(tabPrincipal, "ABA PRINCIPAL OK", 10)
+criarLabelTeste(tabMovimento, "ABA MOVIMENTO OK", 10)
+criarLabelTeste(tabVisual, "ABA VISUAL OK", 10)
