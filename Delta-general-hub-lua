@@ -531,3 +531,79 @@ fecharBtn.MouseButton1Click:Connect(function()
         avisoFrame:Destroy()
     end)
 end)
+-- ===== PARTE 5 — VISUAL & ANIMAÇÕES =====
+
+-- Função simples de hover para botões
+local function addHover(btn)
+    local originalColor = btn.BackgroundColor3
+    btn.MouseEnter:Connect(function()
+        btn.BackgroundColor3 = originalColor:Lerp(Color3.fromRGB(100,100,100),0.5)
+    end)
+    btn.MouseLeave:Connect(function()
+        btn.BackgroundColor3 = originalColor
+    end)
+end
+
+-- Aplicar hover a todos os botões existentes
+for _,v in pairs(gui:GetDescendants()) do
+    if v:IsA("TextButton") then
+        addHover(v)
+    end
+end
+
+-- Animação de abertura do menu
+main.Size = UDim2.new(0,0,0,0)
+local function abrirMenu()
+    main.Visible = true
+    for i = 0,1,0.1 do
+        main.Size = UDim2.new(0,400*i,0,400*i)
+        task.wait(0.02)
+    end
+    main.Size = UDim2.new(0,400,0,400)
+end
+
+-- Animação de fechamento do menu
+local function fecharMenu()
+    for i = 1,0,-0.1 do
+        main.Size = UDim2.new(0,400*i,0,400*i)
+        task.wait(0.02)
+    end
+    main.Visible = false
+end
+
+menuBtn.MouseButton1Click:Connect(function()
+    if main.Visible then
+        fecharMenu()
+    else
+        abrirMenu()
+    end
+end)
+
+-- Efeito de destaque na aba ativa
+local function destacarAba(abaFrame)
+    for _,f in pairs(tabsFrame:GetChildren()) do
+        if f:IsA("TextButton") then
+            f.BackgroundColor3 = Color3.fromRGB(50,50,50)
+        end
+    end
+    abaFrame.BackgroundColor3 = Color3.fromRGB(70,70,70)
+end
+
+for i, nome in ipairs(nomesAbas) do
+    local btn = tabsFrame:FindFirstChild(nome)
+    if btn then
+        btn.MouseButton1Click:Connect(function()
+            destacarAba(btn)
+        end)
+    end
+end
+
+-- Pequeno efeito de fade para mini menu de invisibilidade
+miniFrame.BackgroundTransparency = 1
+RunService.RenderStepped:Connect(function(dt)
+    if miniMenuVisible and miniFrame.BackgroundTransparency > 0.5 then
+        miniFrame.BackgroundTransparency = miniFrame.BackgroundTransparency - 0.05
+    elseif not miniMenuVisible and miniFrame.BackgroundTransparency < 1 then
+        miniFrame.BackgroundTransparency = miniFrame.BackgroundTransparency + 0.05
+    end
+end)
