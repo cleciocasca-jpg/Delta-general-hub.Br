@@ -329,3 +329,93 @@ Players.PlayerAdded:Connect(function(plr)
 		createESP(plr)
 	end
 end)
+-- ===== BOTÕES DO TÍTULO =====
+
+-- Botão minimizar menu (apenas título)
+local minBtn = Instance.new("TextButton")
+minBtn.Parent = title
+minBtn.Size = UDim2.new(0,30,1,0)
+minBtn.Position = UDim2.new(0.7,0,0,0)
+minBtn.Text = "-"
+minBtn.TextScaled = true
+minBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+minBtn.TextColor3 = Color3.fromRGB(255,255,255)
+
+minBtn.MouseButton1Click:Connect(function()
+	for _,tab in pairs(tabs) do
+		tab.Visible = false
+	end
+end)
+
+-- Botão esconder menu (mostrar só título)
+local hideBtn = Instance.new("TextButton")
+hideBtn.Parent = title
+hideBtn.Size = UDim2.new(0,30,1,0)
+hideBtn.Position = UDim2.new(0.78,0,0,0)
+hideBtn.Text = "°"
+hideBtn.TextScaled = true
+hideBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+hideBtn.TextColor3 = Color3.fromRGB(255,255,255)
+
+hideBtn.MouseButton1Click:Connect(function()
+	main.Size = UDim2.new(0,400,0,30)
+	for _,tab in pairs(tabs) do
+		tab.Visible = false
+	end
+end)
+
+-- Botão fechar script (aviso)
+local closeBtn = Instance.new("TextButton")
+closeBtn.Parent = title
+closeBtn.Size = UDim2.new(0,30,1,0)
+closeBtn.Position = UDim2.new(0.86,0,0,0)
+closeBtn.Text = "×"
+closeBtn.TextScaled = true
+closeBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+
+closeBtn.MouseButton1Click:Connect(function()
+	local aviso = Instance.new("TextLabel")
+	aviso.Parent = gui
+	aviso.Size = UDim2.new(0,300,0,100)
+	aviso.Position = UDim2.new(0.5,-150,0.5,-50)
+	aviso.Text = "Tem certeza que deseja fechar?\nSim / Cancelar"
+	aviso.TextScaled = true
+	aviso.BackgroundColor3 = Color3.fromRGB(30,30,30)
+	aviso.TextColor3 = Color3.fromRGB(255,255,255)
+
+	local simBtn = Instance.new("TextButton")
+	simBtn.Parent = aviso
+	simBtn.Size = UDim2.new(0,80,0,25)
+	simBtn.Position = UDim2.new(0.1,0,0.7,0)
+	simBtn.Text = "Sim"
+
+	local cancelarBtn = Instance.new("TextButton")
+	cancelarBtn.Parent = aviso
+	cancelarBtn.Size = UDim2.new(0,80,0,25)
+	cancelarBtn.Position = UDim2.new(0.6,0,0.7,0)
+	cancelarBtn.Text = "Cancelar"
+
+	simBtn.MouseButton1Click:Connect(function()
+		-- Resetar todas funções
+		humanoid.WalkSpeed = 18
+		infJump = false
+		spinOn = false
+		noclipOn = false
+		espOn = false
+		clearESP()
+		invisOn = false
+		for _,v in pairs(char:GetDescendants()) do
+			if v:IsA("BasePart") then
+				v.Transparency = 0
+				v.CanCollide = true
+			end
+		end
+
+		gui:Destroy()
+	end)
+
+	cancelarBtn.MouseButton1Click:Connect(function()
+		aviso:Destroy()
+	end)
+end)
