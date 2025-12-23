@@ -137,3 +137,291 @@ end
 -- Mostrar primeira aba por padrão
 tabs[nomesAbas[1]].Visible = true
 currentTab = tabs[nomesAbas[1]]
+-- ===== PARTE 3 — FUNÇÕES NAS ABAS =====
+
+-- Referência às abas
+local tabPrincipal = tabs["Principal"]
+local tabMovimento = tabs["Movimento"]
+local tabVisual = tabs["Visual"]
+
+-- ===== ABA PRINCIPAL =====
+-- Resetar personagem
+local resetBtn = Instance.new("TextButton")
+resetBtn.Parent = tabPrincipal
+resetBtn.Size = UDim2.new(0,200,0,30)
+resetBtn.Position = UDim2.new(0,10,0,10)
+resetBtn.Text = "RESETAR PERSONAGEM"
+resetBtn.TextColor3 = Color3.new(1,1,1)
+resetBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+resetBtn.BorderSizePixel = 0
+
+resetBtn.MouseButton1Click:Connect(function()
+    player.Character:BreakJoints()
+end)
+
+-- Sentar / Levantar
+local sitBtn = Instance.new("TextButton")
+sitBtn.Parent = tabPrincipal
+sitBtn.Size = UDim2.new(0,200,0,30)
+sitBtn.Position = UDim2.new(0,10,0,50)
+sitBtn.Text = "SENTAR / LEVANTAR"
+sitBtn.TextColor3 = Color3.new(1,1,1)
+sitBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+sitBtn.BorderSizePixel = 0
+
+local sitting = false
+sitBtn.MouseButton1Click:Connect(function()
+    sitting = not sitting
+    humanoid.Sit = sitting
+end)
+
+-- ===== ABA MOVIMENTO =====
+-- WalkSpeed
+local wsOn = false
+local wsBox = Instance.new("TextBox")
+wsBox.Parent = tabMovimento
+wsBox.Position = UDim2.new(0,10,0,10)
+wsBox.Size = UDim2.new(0,100,0,25)
+wsBox.Text = "18"
+
+local wsBtn = Instance.new("TextButton")
+wsBtn.Parent = tabMovimento
+wsBtn.Position = UDim2.new(0,120,0,10)
+wsBtn.Size = UDim2.new(0,100,0,25)
+wsBtn.Text = "WALKSPEED OFF"
+wsBtn.TextColor3 = Color3.new(1,1,1)
+wsBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+wsBtn.BorderSizePixel = 0
+
+wsBtn.MouseButton1Click:Connect(function()
+    wsOn = not wsOn
+    wsBtn.Text = wsOn and "WALKSPEED ON" or "WALKSPEED OFF"
+end)
+
+RunService.RenderStepped:Connect(function()
+    if wsOn then
+        humanoid.WalkSpeed = tonumber(wsBox.Text) or 18
+    else
+        humanoid.WalkSpeed = 18
+    end
+end)
+
+-- Pulo infinito
+local infJump = false
+local jumpBtn = Instance.new("TextButton")
+jumpBtn.Parent = tabMovimento
+jumpBtn.Position = UDim2.new(0,10,0,50)
+jumpBtn.Size = UDim2.new(0,200,0,25)
+jumpBtn.Text = "PULO INFINITO OFF"
+jumpBtn.TextColor3 = Color3.new(1,1,1)
+jumpBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+jumpBtn.BorderSizePixel = 0
+
+jumpBtn.MouseButton1Click:Connect(function()
+    infJump = not infJump
+    jumpBtn.Text = infJump and "PULO INFINITO ON" or "PULO INFINITO OFF"
+end)
+
+UIS.JumpRequest:Connect(function()
+    if infJump then
+        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+    end
+end)
+
+-- Giro veloz
+local spinOn = false
+local spinBox = Instance.new("TextBox")
+spinBox.Parent = tabMovimento
+spinBox.Position = UDim2.new(0,10,0,90)
+spinBox.Size = UDim2.new(0,100,0,25)
+spinBox.Text = "1"
+
+local spinBtn = Instance.new("TextButton")
+spinBtn.Parent = tabMovimento
+spinBtn.Position = UDim2.new(0,120,0,90)
+spinBtn.Size = UDim2.new(0,100,0,25)
+spinBtn.Text = "GIRO VELOZ OFF"
+spinBtn.TextColor3 = Color3.new(1,1,1)
+spinBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+spinBtn.BorderSizePixel = 0
+
+spinBtn.MouseButton1Click:Connect(function()
+    spinOn = not spinOn
+    spinBtn.Text = spinOn and "GIRO VELOZ ON" or "GIRO VELOZ OFF"
+end)
+
+RunService.RenderStepped:Connect(function(dt)
+    if spinOn then
+        local speed = tonumber(spinBox.Text) or 1
+        root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(360 * speed * dt), 0)
+    end
+end)
+
+-- Noclip
+local noclipOn = false
+local noclipBtn = Instance.new("TextButton")
+noclipBtn.Parent = tabMovimento
+noclipBtn.Position = UDim2.new(0,10,0,130)
+noclipBtn.Size = UDim2.new(0,200,0,25)
+noclipBtn.Text = "NOCLIP OFF"
+noclipBtn.TextColor3 = Color3.new(1,1,1)
+noclipBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+noclipBtn.BorderSizePixel = 0
+
+noclipBtn.MouseButton1Click:Connect(function()
+    noclipOn = not noclipOn
+    noclipBtn.Text = noclipOn and "NOCLIP ON" or "NOCLIP OFF"
+end)
+
+RunService.RenderStepped:Connect(function()
+    for _,v in pairs(char:GetDescendants()) do
+        if v:IsA("BasePart") then
+            v.CanCollide = not noclipOn
+        end
+    end
+end)
+
+-- ===== ABA VISUAL =====
+-- Invisibilidade com mini menu oculto
+local invisOn = false
+local miniMenuVisible = false
+local savedCFrame = nil
+
+local invisBtn = Instance.new("TextButton")
+invisBtn.Parent = tabVisual
+invisBtn.Position = UDim2.new(0,10,0,10)
+invisBtn.Size = UDim2.new(0,200,0,25)
+invisBtn.Text = "INVISIBILIDADE DESATIVAR"
+invisBtn.TextColor3 = Color3.new(1,1,1)
+invisBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+invisBtn.BorderSizePixel = 0
+
+-- Mini menu invisibilidade (AX / BX)
+local miniFrame = Instance.new("Frame")
+miniFrame.Parent = tabVisual
+miniFrame.Size = UDim2.new(0,260,0,40)
+miniFrame.Position = UDim2.new(0,10,0,50)
+miniFrame.BackgroundTransparency = 0.5
+miniFrame.BackgroundColor3 = Color3.fromRGB(40,40,40)
+miniFrame.Visible = false
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0,6)
+corner.Parent = miniFrame
+
+local axBtn = Instance.new("TextButton")
+axBtn.Parent = miniFrame
+axBtn.Position = UDim2.new(0,10,0,5)
+axBtn.Size = UDim2.new(0,100,0,30)
+axBtn.Text = "AX"
+axBtn.TextColor3 = Color3.new(1,1,1)
+axBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+local bxBtn = Instance.new("TextButton")
+bxBtn.Parent = miniFrame
+bxBtn.Position = UDim2.new(0,140,0,5)
+bxBtn.Size = UDim2.new(0,100,0,30)
+bxBtn.Text = "BX"
+bxBtn.TextColor3 = Color3.new(1,1,1)
+bxBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+
+-- Evento invisibilidade
+invisBtn.MouseButton1Click:Connect(function()
+    invisOn = not invisOn
+    invisBtn.Text = invisOn and "INVISIBILIDADE ATIVAR" or "INVISIBILIDADE DESATIVAR"
+    miniMenuVisible = invisOn
+    miniFrame.Visible = miniMenuVisible
+
+    for _,v in pairs(char:GetDescendants()) do
+        if v:IsA("BasePart") then
+            v.Transparency = invisOn and 1 or 0
+        end
+    end
+end)
+
+axBtn.MouseButton1Click:Connect(function()
+    if invisOn then
+        savedCFrame = root.CFrame
+    end
+end)
+
+bxBtn.MouseButton1Click:Connect(function()
+    if invisOn and savedCFrame then
+        root.CFrame = savedCFrame
+    end
+end)
+
+-- ESP BOX + NOME (COR DO TIME)
+local espOn = false
+local espFolder = Instance.new("Folder", gui)
+espFolder.Name = "ESP_BOX"
+
+local espBtn = Instance.new("TextButton")
+espBtn.Parent = tabVisual
+espBtn.Position = UDim2.new(0,10,0,100)
+espBtn.Size = UDim2.new(0,200,0,25)
+espBtn.Text = "ESP OFF"
+espBtn.TextColor3 = Color3.new(1,1,1)
+espBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+espBtn.BorderSizePixel = 0
+
+local function clearESP()
+    for _,v in pairs(espFolder:GetChildren()) do
+        v:Destroy()
+    end
+end
+
+local function createESP(plr)
+    if plr == player then return end
+    if not plr.Character then return end
+    if not plr.Character:FindFirstChild("HumanoidRootPart") then return end
+
+    local hrp = plr.Character.HumanoidRootPart
+
+    local box = Instance.new("BoxHandleAdornment")
+    box.Adornee = hrp
+    box.Size = Vector3.new(4,6,2)
+    box.AlwaysOnTop = true
+    box.ZIndex = 10
+    box.Transparency = 0.5
+    box.Parent = espFolder
+
+    if plr.Team and plr.Team.TeamColor then
+        box.Color3 = plr.Team.TeamColor.Color
+    else
+        box.Color3 = Color3.new(1,1,1)
+    end
+
+    local nameGui = Instance.new("BillboardGui")
+    nameGui.Adornee = hrp
+    nameGui.Size = UDim2.new(0,100,0,30)
+    nameGui.StudsOffset = Vector3.new(0,4,0)
+    nameGui.AlwaysOnTop = true
+    nameGui.Parent = espFolder
+
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Parent = nameGui
+    nameLabel.Size = UDim2.new(1,0,1,0)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Text = plr.Name
+    nameLabel.TextScaled = true
+    nameLabel.TextColor3 = box.Color3
+    nameLabel.TextStrokeTransparency = 0
+end
+
+espBtn.MouseButton1Click:Connect(function()
+    espOn = not espOn
+    espBtn.Text = espOn and "ESP ON" or "ESP OFF"
+    clearESP()
+    if espOn then
+        for _,plr in pairs(Players:GetPlayers()) do
+            createESP(plr)
+        end
+    end
+end)
+
+Players.PlayerAdded:Connect(function(plr)
+    if espOn then
+        plr.CharacterAdded:Wait()
+        task.wait(1)
+        createESP(plr)
+    end
+end)
