@@ -1,0 +1,228 @@
+--[[ 
+SCRIPT GERAL BR 1.00 (BETA)
+Autor: Você
+Compatível com Delta Executor
+]]
+
+-- SERVICES
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local Player = Players.LocalPlayer
+
+-- CHARACTER
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+local HRP = Character:WaitForChild("HumanoidRootPart")
+
+Player.CharacterAdded:Connect(function(char)
+    Character = char
+    Humanoid = char:WaitForChild("Humanoid")
+    HRP = char:WaitForChild("HumanoidRootPart")
+end)
+
+-- STATE
+local STATES = {
+    WalkSpeed = false,
+    Jump = false,
+    Spin = false,
+    Invisible = false
+}
+
+-- DEFAULTS
+local DEFAULT_WALKSPEED = 18
+local SpinSpeed = 1
+local WalkSpeedValue = 18
+
+--------------------------------------------------
+-- UI BASE
+--------------------------------------------------
+local GUI = Instance.new("ScreenGui", Player:WaitForChild("PlayerGui"))
+GUI.Name = "SCRIPT_GERAL_BR"
+
+--------------------------------------------------
+-- BOTÃO MENU (PEQUENO)
+--------------------------------------------------
+local MenuButton = Instance.new("TextButton", GUI)
+MenuButton.Size = UDim2.new(0, 90, 0, 35)
+MenuButton.Position = UDim2.new(0, 20, 0.5, 0)
+MenuButton.Text = "Menu"
+MenuButton.BackgroundColor3 = Color3.fromRGB(30,30,30)
+MenuButton.TextColor3 = Color3.new(1,1,1)
+MenuButton.BorderSizePixel = 0
+MenuButton.Active = true
+MenuButton.Draggable = true
+
+--------------------------------------------------
+-- HUB PRINCIPAL
+--------------------------------------------------
+local Hub = Instance.new("Frame", GUI)
+Hub.Size = UDim2.new(0, 380, 0, 350)
+Hub.Position = UDim2.new(0.5, -190, 0.5, -175)
+Hub.BackgroundColor3 = Color3.fromRGB(20,20,20)
+Hub.Visible = false
+Hub.BorderSizePixel = 0
+
+-- TITULO
+local Title = Instance.new("TextLabel", Hub)
+Title.Size = UDim2.new(1, 0, 0, 35)
+Title.Text = "SCRIPT GERAL BR 1.00 (BETA)"
+Title.BackgroundColor3 = Color3.fromRGB(15,15,15)
+Title.TextColor3 = Color3.new(1,1,1)
+Title.BorderSizePixel = 0
+Title.TextSize = 13
+
+--------------------------------------------------
+-- BOTÕES DO TÍTULO
+--------------------------------------------------
+local function TitleButton(text, pos)
+    local b = Instance.new("TextButton", Hub)
+    b.Size = UDim2.new(0, 30, 0, 30)
+    b.Position = pos
+    b.Text = text
+    b.BackgroundColor3 = Color3.fromRGB(30,30,30)
+    b.TextColor3 = Color3.new(1,1,1)
+    b.BorderSizePixel = 0
+    return b
+end
+
+local BtnClose = TitleButton("-", UDim2.new(1, -90, 0, 2))
+local BtnMin = TitleButton("°", UDim2.new(1, -60, 0, 2))
+local BtnExit = TitleButton("×", UDim2.new(1, -30, 0, 2))
+
+--------------------------------------------------
+-- CONTAINER
+--------------------------------------------------
+local Content = Instance.new("Frame", Hub)
+Content.Position = UDim2.new(0, 0, 0, 35)
+Content.Size = UDim2.new(1, 0, 1, -35)
+Content.BackgroundTransparency = 1
+
+--------------------------------------------------
+-- WALK SPEED
+--------------------------------------------------
+local WSLabel = Instance.new("TextLabel", Content)
+WSLabel.Text = "WALKSPEED"
+WSLabel.Position = UDim2.new(0, 10, 0, 10)
+WSLabel.Size = UDim2.new(0, 200, 0, 25)
+WSLabel.TextColor3 = Color3.new(1,1,1)
+WSLabel.BackgroundTransparency = 1
+WSLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local WSBox = Instance.new("TextBox", Content)
+WSBox.Position = UDim2.new(0, 10, 0, 40)
+WSBox.Size = UDim2.new(0, 120, 0, 30)
+WSBox.Text = "18"
+WSBox.BackgroundColor3 = Color3.fromRGB(40,40,40)
+WSBox.TextColor3 = Color3.new(1,1,1)
+WSBox.BorderSizePixel = 0
+
+local WSOn = Instance.new("TextButton", Content)
+WSOn.Text = "ON"
+WSOn.Position = UDim2.new(0, 150, 0, 40)
+WSOn.Size = UDim2.new(0, 50, 0, 30)
+WSOn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+WSOn.TextColor3 = Color3.new(1,1,1)
+
+local WSOff = Instance.new("TextButton", Content)
+WSOff.Text = "OFF"
+WSOff.Position = UDim2.new(0, 210, 0, 40)
+WSOff.Size = UDim2.new(0, 50, 0, 30)
+WSOff.BackgroundColor3 = Color3.fromRGB(60,60,60)
+WSOff.TextColor3 = Color3.new(1,1,1)
+
+WSOn.MouseButton1Click:Connect(function()
+    WalkSpeedValue = math.max(0, tonumber(WSBox.Text) or 18)
+    Humanoid.WalkSpeed = WalkSpeedValue
+    STATES.WalkSpeed = true
+end)
+
+WSOff.MouseButton1Click:Connect(function()
+    Humanoid.WalkSpeed = DEFAULT_WALKSPEED
+    STATES.WalkSpeed = false
+end)
+
+--------------------------------------------------
+-- PULO INFINITO
+--------------------------------------------------
+UIS.JumpRequest:Connect(function()
+    if STATES.Jump then
+        Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+    end
+end)
+
+--------------------------------------------------
+-- GIRO VELOZ
+--------------------------------------------------
+RunService.RenderStepped:Connect(function(dt)
+    if STATES.Spin then
+        HRP.CFrame = HRP.CFrame * CFrame.Angles(0, math.rad(360 * SpinSpeed * dt), 0)
+    end
+end)
+
+--------------------------------------------------
+-- INVISIBILIDADE UGC
+--------------------------------------------------
+local Clone
+local SavedCFrame
+
+local function SetInvisible(state)
+    for _, v in pairs(Character:GetDescendants()) do
+        if v:IsA("BasePart") then
+            v.Transparency = state and 1 or 0
+            v.CanCollide = not state
+        end
+    end
+end
+
+local function ActivateInvisible()
+    if STATES.Invisible then return end
+    STATES.Invisible = true
+    SavedCFrame = HRP.CFrame
+
+    Clone = Character:Clone()
+    for _, v in pairs(Clone:GetDescendants()) do
+        if v:IsA("BasePart") then v.Anchored = true end
+        if v:IsA("Script") or v:IsA("LocalScript") then v:Destroy() end
+    end
+    Clone.Parent = workspace
+    SetInvisible(true)
+end
+
+local function DeactivateInvisible(mode)
+    STATES.Invisible = false
+    SetInvisible(false)
+    if mode == "AX" and SavedCFrame then
+        HRP.CFrame = SavedCFrame
+    end
+    if Clone then Clone:Destroy() Clone = nil end
+end
+
+--------------------------------------------------
+-- MENU BUTTON
+--------------------------------------------------
+MenuButton.MouseButton1Click:Connect(function()
+    Hub.Visible = not Hub.Visible
+end)
+
+--------------------------------------------------
+-- MINIMIZAR / FECHAR
+--------------------------------------------------
+BtnClose.MouseButton1Click:Connect(function()
+    Hub.Visible = false
+end)
+
+local minimized = false
+BtnMin.MouseButton1Click:Connect(function()
+    minimized = not minimized
+    Content.Visible = not minimized
+end)
+
+--------------------------------------------------
+-- ENCERRAR SCRIPT
+--------------------------------------------------
+BtnExit.MouseButton1Click:Connect(function()
+    Humanoid.WalkSpeed = DEFAULT_WALKSPEED
+    STATES = {}
+    GUI:Destroy()
+end)
