@@ -425,3 +425,109 @@ Players.PlayerAdded:Connect(function(plr)
         createESP(plr)
     end
 end)
+-- ===== PARTE 4 — FECHAMENTO E AVISOS =====
+
+-- Referência aos botões do título
+local fecharBtn, minimizarBtn, avisoBtn
+-- O título: "SCRIPT GERAL BR 2.0 (BETA)   -   °   ×"
+-- Vamos separar os botões simbólicos para facilitar
+
+-- Botão minimizar "°"
+minimizarBtn = Instance.new("TextButton")
+minimizarBtn.Parent = title
+minimizarBtn.Size = UDim2.new(0,30,1,0)
+minimizarBtn.Position = UDim2.new(0.8,0,0,0)
+minimizarBtn.Text = "°"
+minimizarBtn.TextColor3 = Color3.new(1,1,1)
+minimizarBtn.BackgroundTransparency = 1
+
+-- Botão fechar "×"
+fecharBtn = Instance.new("TextButton")
+fecharBtn.Parent = title
+fecharBtn.Size = UDim2.new(0,30,1,0)
+fecharBtn.Position = UDim2.new(0.9,0,0,0)
+fecharBtn.Text = "×"
+fecharBtn.TextColor3 = Color3.new(1,1,1)
+fecharBtn.BackgroundTransparency = 1
+
+-- Botão ocultar "-"
+minimizarSimplesBtn = Instance.new("TextButton")
+minimizarSimplesBtn.Parent = title
+minimizarSimplesBtn.Size = UDim2.new(0,30,1,0)
+minimizarSimplesBtn.Position = UDim2.new(0.7,0,0,0)
+minimizarSimplesBtn.Text = "-"
+minimizarSimplesBtn.TextColor3 = Color3.new(1,1,1)
+minimizarSimplesBtn.BackgroundTransparency = 1
+
+-- Função minimizar (apenas esconder funções mantendo título)
+minimizarSimplesBtn.MouseButton1Click:Connect(function()
+    for _,f in pairs(tabs) do
+        f.Visible = false
+    end
+end)
+
+-- Função de minimizar / mostrar abas
+minimizarBtn.MouseButton1Click:Connect(function()
+    if currentTab then
+        currentTab.Visible = not currentTab.Visible
+    end
+end)
+
+-- Função fechar (aviso + reset geral)
+fecharBtn.MouseButton1Click:Connect(function()
+    local avisoFrame = Instance.new("Frame")
+    avisoFrame.Parent = gui
+    avisoFrame.Size = UDim2.new(0,300,0,150)
+    avisoFrame.Position = UDim2.new(0.5,-150,0.5,-75)
+    avisoFrame.BackgroundColor3 = Color3.fromRGB(30,30,30)
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0,10)
+    corner.Parent = avisoFrame
+
+    local avisoLabel = Instance.new("TextLabel")
+    avisoLabel.Parent = avisoFrame
+    avisoLabel.Size = UDim2.new(1,0,0.6,0)
+    avisoLabel.Position = UDim2.new(0,0,0,0)
+    avisoLabel.Text = "Deseja fechar o script?\nTodas as funções serão desativadas."
+    avisoLabel.TextColor3 = Color3.new(1,1,1)
+    avisoLabel.TextScaled = true
+    avisoLabel.BackgroundTransparency = 1
+
+    local simBtn = Instance.new("TextButton")
+    simBtn.Parent = avisoFrame
+    simBtn.Size = UDim2.new(0,100,0,30)
+    simBtn.Position = UDim2.new(0.1,0,0.7,0)
+    simBtn.Text = "SIM"
+    simBtn.TextColor3 = Color3.new(1,1,1)
+    simBtn.BackgroundColor3 = Color3.fromRGB(80,0,0)
+    simBtn.BorderSizePixel = 0
+
+    local naoBtn = Instance.new("TextButton")
+    naoBtn.Parent = avisoFrame
+    naoBtn.Size = UDim2.new(0,100,0,30)
+    naoBtn.Position = UDim2.new(0.6,0,0.7,0)
+    naoBtn.Text = "NÃO"
+    naoBtn.TextColor3 = Color3.new(1,1,1)
+    naoBtn.BackgroundColor3 = Color3.fromRGB(0,80,0)
+    naoBtn.BorderSizePixel = 0
+
+    simBtn.MouseButton1Click:Connect(function()
+        -- Resetar funções
+        wsOn = false
+        humanoid.WalkSpeed = 18
+        infJump = false
+        spinOn = false
+        noclipOn = false
+        invisOn = false
+        miniFrame.Visible = false
+        espOn = false
+        clearESP()
+
+        gui:Destroy()
+    end)
+
+    naoBtn.MouseButton1Click:Connect(function()
+        avisoFrame:Destroy()
+    end)
+end)
