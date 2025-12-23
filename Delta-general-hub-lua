@@ -493,3 +493,75 @@ invisBtn.MouseButton1Click:Connect(function()
 		end
 	end
 end)
+-- ===== PARTE VISUAL / CONFIGURAÇÕES =====
+-- Cria a aba "Visual" se ainda não existir
+local visualTabName = "Visual"
+if not tabs[visualTabName] then
+	local abaFrame = Instance.new("Frame")
+	abaFrame.Parent = main
+	abaFrame.Size = UDim2.new(1,0,1,-60)
+	abaFrame.Position = UDim2.new(0,0,0,60)
+	abaFrame.Visible = false
+	abaFrame.BackgroundTransparency = 1
+	tabs[visualTabName] = abaFrame
+end
+
+local visualTab = tabs[visualTabName]
+
+-- Título para a aba
+local titleVisual = Instance.new("TextLabel")
+titleVisual.Parent = visualTab
+titleVisual.Size = UDim2.new(1,0,0,30)
+titleVisual.Position = UDim2.new(0,0,0,0)
+titleVisual.Text = "Configurações de Visual"
+titleVisual.TextScaled = true
+titleVisual.BackgroundTransparency = 1
+titleVisual.TextColor3 = Color3.fromRGB(255,255,255)
+titleVisual.TextStrokeTransparency = 0
+titleVisual.TextStrokeColor3 = Color3.fromRGB(0,0,0)
+
+-- Função para criar botões de cor
+local function criarBotaoCor(nome, posY, corPadrao)
+	local btn = Instance.new("TextButton")
+	btn.Parent = visualTab
+	btn.Size = UDim2.new(0,150,0,25)
+	btn.Position = UDim2.new(0,10,0,posY)
+	btn.Text = nome
+	btn.BackgroundColor3 = corPadrao
+	btn.TextColor3 = Color3.fromRGB(255,255,255)
+	btn.TextStrokeTransparency = 0
+	btn.TextStrokeColor3 = Color3.fromRGB(0,0,0)
+	addHover(btn)
+	return btn
+end
+
+-- Botão para mudar cor do menu principal
+local btnCorMenu = criarBotaoCor("Cor do Menu", 50, main.BackgroundColor3)
+btnCorMenu.MouseButton1Click:Connect(function()
+	-- Exemplo de cor aleatória para teste
+	local novaCor = Color3.fromHSV(math.random(), 0.7, 0.9)
+	main.BackgroundColor3 = novaCor
+end)
+
+-- Botão para mudar cor das abas
+local btnCorAbas = criarBotaoCor("Cor das Abas", 90, Color3.fromRGB(70,130,180))
+btnCorAbas.MouseButton1Click:Connect(function()
+	local novaCor = Color3.fromHSV(math.random(), 0.7, 0.9)
+	for _, nome in ipairs(abasNomes) do
+		local btn = tabsFrame:FindFirstChild(nome)
+		if btn then
+			btn.BackgroundColor3 = novaCor
+		end
+	end
+end)
+
+-- Botão para mudar cor dos botões da aba Visual
+local btnCorBotoes = criarBotaoCor("Cor Botões", 130, Color3.fromRGB(50,50,50))
+btnCorBotoes.MouseButton1Click:Connect(function()
+	local novaCor = Color3.fromHSV(math.random(), 0.7, 0.9)
+	for _, child in pairs(visualTab:GetChildren()) do
+		if child:IsA("TextButton") then
+			child.BackgroundColor3 = novaCor
+		end
+	end
+end)
