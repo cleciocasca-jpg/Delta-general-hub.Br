@@ -371,3 +371,26 @@ Players.PlayerAdded:Connect(function(plr)
 		createESP(plr)
 	end
 end)
+-- ===== NOCLIP =====
+local noclipOn = false
+
+local noclipBtn = Instance.new("TextButton")
+noclipBtn.Parent = main
+noclipBtn.Position = UDim2.new(0,10,0,250)
+noclipBtn.Size = UDim2.new(0,120,0,25)
+noclipBtn.Text = "NOCLIP OFF"
+
+noclipBtn.MouseButton1Click:Connect(function()
+	noclipOn = not noclipOn
+	noclipBtn.Text = noclipOn and "NOCLIP ON" or "NOCLIP OFF"
+end)
+
+RunService.Stepped:Connect(function()
+	if noclipOn and char then
+		for _,v in pairs(char:GetDescendants()) do
+			if v:IsA("BasePart") then
+				v.CanCollide = false
+			end
+		end
+	end
+end)
