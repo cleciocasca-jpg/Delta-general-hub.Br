@@ -191,3 +191,44 @@ miniBtn.MouseButton1Click:Connect(function()
 		end
 	end
 end)
+-- ===== AVISO DE FECHAMENTO =====
+local warnFrame = Instance.new("Frame")
+warnFrame.Parent = gui
+warnFrame.Size = UDim2.new(0,300,0,150)
+warnFrame.Position = UDim2.new(0.5,-150,0.5,-75)
+warnFrame.Visible = false
+warnFrame.BackgroundColor3 = Color3.fromRGB(60,60,60)
+
+local warnText = Instance.new("TextLabel")
+warnText.Parent = warnFrame
+warnText.Size = UDim2.new(1,0,0.6,0)
+warnText.Text = "Tem certeza que deseja fechar o script?"
+warnText.TextWrapped = true
+warnText.TextScaled = true
+
+local yesBtn = Instance.new("TextButton")
+yesBtn.Parent = warnFrame
+yesBtn.Size = UDim2.new(0.4,0,0.25,0)
+yesBtn.Position = UDim2.new(0.05,0,0.7,0)
+yesBtn.Text = "SIM / CONTINUAR"
+
+local noBtn = Instance.new("TextButton")
+noBtn.Parent = warnFrame
+noBtn.Size = UDim2.new(0.4,0,0.25,0)
+noBtn.Position = UDim2.new(0.55,0,0.7,0)
+noBtn.Text = "CANCELAR"
+
+-- botão "X"
+local exitBtn = Instance.new("TextButton")
+exitBtn.Parent = title
+exitBtn.Size = UDim2.new(0,30,1,0)
+exitBtn.Position = UDim2.new(1,-30,0,0)
+exitBtn.Text = "X"
+
+exitBtn.MouseButton1Click:Connect(function()
+	warnFrame.Visible = true
+end)
+
+noBtn.MouseButton1Click:Connect(function()
+	warnFrame.Visible = false
+end)
