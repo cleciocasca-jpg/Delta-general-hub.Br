@@ -419,3 +419,77 @@ closeBtn.MouseButton1Click:Connect(function()
 		aviso:Destroy()
 	end)
 end)
+-- ===== MELHORIAS VISUAIS =====
+
+-- Função para hover nos botões
+local function addHover(button)
+	button.MouseEnter:Connect(function()
+		button.BackgroundColor3 = Color3.fromRGB(100,100,100)
+	end)
+	button.MouseLeave:Connect(function()
+		button.BackgroundColor3 = Color3.fromRGB(50,50,50)
+	end)
+end
+
+-- Aplicar hover em todos os botões do main
+for _, obj in pairs(main:GetDescendants()) do
+	if obj:IsA("TextButton") then
+		addHover(obj)
+	end
+end
+
+-- Fade in do menu ao abrir
+main.Visible = false
+local function fadeIn(frame)
+	frame.Visible = true
+	for i=0,1,0.1 do
+		frame.BackgroundTransparency = 1-i
+		wait(0.03)
+	end
+end
+
+menuBtn.MouseButton1Click:Connect(function()
+	if main.Visible then
+		-- fechar
+		main.Visible = false
+		for _,tab in pairs(tabs) do
+			tab.Visible = false
+		end
+	else
+		-- abrir com fade
+		fadeIn(main)
+		if tabs["Principal"] then
+			tabs["Principal"].Visible = true
+			currentTab = tabs["Principal"]
+		end
+	end
+end)
+
+-- Fade de mini menu invisibilidade
+local function fadeMiniMenu(show)
+	if show then
+		miniInvisFrame.Visible = true
+		for i=0,1,0.2 do
+			miniInvisFrame.BackgroundTransparency = 1-i
+			wait(0.03)
+		end
+	else
+		for i=0,1,0.2 do
+			miniInvisFrame.BackgroundTransparency = i
+			wait(0.03)
+		end
+		miniInvisFrame.Visible = false
+	end
+end
+
+-- Atualizar fade ao ativar invisibilidade
+invisBtn.MouseButton1Click:Connect(function()
+	invisOn = not invisOn
+	fadeMiniMenu(invisOn)
+
+	for _,v in pairs(char:GetDescendants()) do
+		if v:IsA("BasePart") then
+			v.Transparency = invisOn and 1 or 0
+		end
+	end
+end)
