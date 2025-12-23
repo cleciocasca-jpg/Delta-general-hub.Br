@@ -296,3 +296,78 @@ miniInvis.MouseButton1Click:Connect(function()
 		end
 	end
 end)
+-- ===== ESP BOX + NOME (COR DO TIME) =====
+local espOn = false
+local espFolder = Instance.new("Folder", gui)
+espFolder.Name = "ESP_BOX"
+
+local espBtn = Instance.new("TextButton")
+espBtn.Parent = main
+espBtn.Position = UDim2.new(0,10,0,210)
+espBtn.Size = UDim2.new(0,120,0,25)
+espBtn.Text = "ESP OFF"
+
+local function clearESP()
+	for _,v in pairs(espFolder:GetChildren()) do
+		v:Destroy()
+	end
+end
+
+local function createESP(plr)
+	if plr == player then return end
+	if not plr.Character then return end
+	if not plr.Character:FindFirstChild("HumanoidRootPart") then return end
+
+	local hrp = plr.Character.HumanoidRootPart
+
+	local box = Instance.new("BoxHandleAdornment")
+	box.Adornee = hrp
+	box.Size = Vector3.new(4,6,2)
+	box.AlwaysOnTop = true
+	box.ZIndex = 10
+	box.Transparency = 0.5
+	box.Parent = espFolder
+
+	-- cor do time
+	if plr.Team and plr.Team.TeamColor then
+		box.Color3 = plr.Team.TeamColor.Color
+	else
+		box.Color3 = Color3.new(1,1,1)
+	end
+
+	local nameGui = Instance.new("BillboardGui")
+	nameGui.Adornee = hrp
+	nameGui.Size = UDim2.new(0,100,0,30)
+	nameGui.StudsOffset = Vector3.new(0,4,0)
+	nameGui.AlwaysOnTop = true
+	nameGui.Parent = espFolder
+
+	local nameLabel = Instance.new("TextLabel")
+	nameLabel.Parent = nameGui
+	nameLabel.Size = UDim2.new(1,0,1,0)
+	nameLabel.BackgroundTransparency = 1
+	nameLabel.Text = plr.Name
+	nameLabel.TextScaled = true
+	nameLabel.TextColor3 = box.Color3
+	nameLabel.TextStrokeTransparency = 0
+end
+
+espBtn.MouseButton1Click:Connect(function()
+	espOn = not espOn
+	espBtn.Text = espOn and "ESP ON" or "ESP OFF"
+	clearESP()
+
+	if espOn then
+		for _,plr in pairs(Players:GetPlayers()) do
+			createESP(plr)
+		end
+	end
+end)
+
+Players.PlayerAdded:Connect(function(plr)
+	if espOn then
+		plr.CharacterAdded:Wait()
+		task.wait(1)
+		createESP(plr)
+	end
+end)
