@@ -1,4 +1,5 @@
 -- SCRIPT GERAL BR 1.00 (BETA)
+-- Estilo LS-Zee-Hub-VIP
 -- Compatível com Delta Executor
 
 local Players = game:GetService("Players")
@@ -10,428 +11,89 @@ local char = player.Character or player.CharacterAdded:Wait()
 local humanoid = char:WaitForChild("Humanoid")
 local root = char:WaitForChild("HumanoidRootPart")
 
--- GUI BASE
+-- ===== GUI BASE =====
 local gui = Instance.new("ScreenGui")
 gui.Name = "DeltaGeralHub"
 gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
--- BOTÃO MENU PEQUENO
+-- ===== BOTÃO MENU PEQUENO =====
 local menuBtn = Instance.new("TextButton")
 menuBtn.Parent = gui
 menuBtn.Size = UDim2.new(0,80,0,30)
 menuBtn.Position = UDim2.new(0,20,0,200)
 menuBtn.Text = "MENU"
+menuBtn.TextColor3 = Color3.new(1,1,1)
+menuBtn.BackgroundColor3 = Color3.fromRGB(40,40,40)
 menuBtn.Active = true
 menuBtn.Draggable = true
+menuBtn.BorderSizePixel = 0
+menuBtn.AutoButtonColor = true
 
--- MENU PRINCIPAL
+-- ===== MENU PRINCIPAL =====
 local main = Instance.new("Frame")
 main.Parent = gui
-main.Size = UDim2.new(0,340,0,330)
-main.Position = UDim2.new(0.5,-170,0.5,-165)
+main.Size = UDim2.new(0,350,0,400)
+main.Position = UDim2.new(0.8,0,0.2,0) -- canto direito estilo LS-Zee
+main.BackgroundColor3 = Color3.fromRGB(30,30,30)
+main.BorderSizePixel = 0
 main.Visible = false
 main.Active = true
 main.Draggable = true
 
--- TÍTULO
+-- ===== TÍTULO =====
 local title = Instance.new("TextLabel")
 title.Parent = main
 title.Size = UDim2.new(1,0,0,30)
+title.Position = UDim2.new(0,0,0,0)
 title.Text = "SCRIPT GERAL BR 1.00 (BETA)   -   °   ×"
 title.TextScaled = true
+title.TextColor3 = Color3.new(1,1,1)
+title.BackgroundColor3 = Color3.fromRGB(50,50,50)
+title.BorderSizePixel = 0
 
-menuBtn.MouseButton1Click:Connect(function()
-	main.Visible = not main.Visible
-end)
--- ===== WALKSPEED =====
-local wsOn = false
+-- BOTÕES DO TÍTULO
+local minimizeBtn = Instance.new("TextButton")
+minimizeBtn.Parent = title
+minimizeBtn.Size = UDim2.new(0,25,0,25)
+minimizeBtn.Position = UDim2.new(0.9,0,0,0)
+minimizeBtn.Text = "°"
+minimizeBtn.TextColor3 = Color3.new(1,1,1)
+minimizeBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+minimizeBtn.BorderSizePixel = 0
 
-local wsBox = Instance.new("TextBox")
-wsBox.Parent = main
-wsBox.Position = UDim2.new(0,10,0,50)
-wsBox.Size = UDim2.new(0,100,0,25)
-wsBox.Text = "18"
-
-local wsBtn = Instance.new("TextButton")
-wsBtn.Parent = main
-wsBtn.Position = UDim2.new(0,120,0,50)
-wsBtn.Size = UDim2.new(0,80,0,25)
-wsBtn.Text = "OFF"
-
-wsBtn.MouseButton1Click:Connect(function()
-	wsOn = not wsOn
-	wsBtn.Text = wsOn and "ON" or "OFF"
-end)
-
-RunService.RenderStepped:Connect(function()
-	if wsOn then
-		humanoid.WalkSpeed = tonumber(wsBox.Text) or 18
-	else
-		humanoid.WalkSpeed = 18
-	end
-end)
-
--- ===== PULO INFINITO =====
-local infJump = false
-
-local jumpBtn = Instance.new("TextButton")
-jumpBtn.Parent = main
-jumpBtn.Position = UDim2.new(0,10,0,90)
-jumpBtn.Size = UDim2.new(0,120,0,25)
-jumpBtn.Text = "PULO OFF"
-
-jumpBtn.MouseButton1Click:Connect(function()
-	infJump = not infJump
-	jumpBtn.Text = infJump and "PULO ON" or "PULO OFF"
-end)
-
-UIS.JumpRequest:Connect(function()
-	if infJump then
-		humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-	end
-end)
--- ===== GIRO VELOZ =====
-local spinOn = false
-
-local spinBox = Instance.new("TextBox")
-spinBox.Parent = main
-spinBox.Position = UDim2.new(0,10,0,130)
-spinBox.Size = UDim2.new(0,100,0,25)
-spinBox.Text = "1"
-
-local spinBtn = Instance.new("TextButton")
-spinBtn.Parent = main
-spinBtn.Position = UDim2.new(0,120,0,130)
-spinBtn.Size = UDim2.new(0,80,0,25)
-spinBtn.Text = "OFF"
-
-spinBtn.MouseButton1Click:Connect(function()
-	spinOn = not spinOn
-	spinBtn.Text = spinOn and "ON" or "OFF"
-end)
-
-RunService.RenderStepped:Connect(function(dt)
-	if spinOn then
-		local speed = tonumber(spinBox.Text) or 1
-		root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(360 * speed * dt), 0)
-	end
-end)
-
--- ===== INVISIBILIDADE =====
-local invisOn = false
-local savedCFrame
-
-local invisBtn = Instance.new("TextButton")
-invisBtn.Parent = main
-invisBtn.Position = UDim2.new(0,10,0,170)
-invisBtn.Size = UDim2.new(0,120,0,25)
-invisBtn.Text = "INVIS OFF"
-
-local axBtn = Instance.new("TextButton")
-axBtn.Parent = main
-axBtn.Position = UDim2.new(0,140,0,170)
-axBtn.Size = UDim2.new(0,50,0,25)
-axBtn.Text = "AX"
-
-local bxBtn = Instance.new("TextButton")
-bxBtn.Parent = main
-bxBtn.Position = UDim2.new(0,200,0,170)
-bxBtn.Size = UDim2.new(0,50,0,25)
-bxBtn.Text = "BX"
-
-invisBtn.MouseButton1Click:Connect(function()
-	invisOn = not invisOn
-	invisBtn.Text = invisOn and "INVIS ON" or "INVIS OFF"
-
-	for _,v in pairs(char:GetDescendants()) do
-		if v:IsA("BasePart") then
-			v.Transparency = invisOn and 1 or 0
-		end
-	end
-end)
-
-axBtn.MouseButton1Click:Connect(function()
-	if invisOn then
-		savedCFrame = root.CFrame
-	end
-end)
-
-bxBtn.MouseButton1Click:Connect(function()
-	if invisOn and savedCFrame then
-		root.CFrame = savedCFrame
-	end
-end)
--- ===== CONTROLES DO TÍTULO =====
-local minimized = false
-
--- botão "-"
 local closeBtn = Instance.new("TextButton")
 closeBtn.Parent = title
-closeBtn.Size = UDim2.new(0,30,1,0)
-closeBtn.Position = UDim2.new(1,-90,0,0)
-closeBtn.Text = "-"
+closeBtn.Size = UDim2.new(0,25,0,25)
+closeBtn.Position = UDim2.new(0.95,0,0,0)
+closeBtn.Text = "×"
+closeBtn.TextColor3 = Color3.new(1,1,1)
+closeBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+closeBtn.BorderSizePixel = 0
 
-closeBtn.MouseButton1Click:Connect(function()
-	main.Visible = false
+-- AÇÃO DO BOTÃO MENU PEQUENO
+menuBtn.MouseButton1Click:Connect(function()
+    main.Visible = not main.Visible
 end)
 
--- botão "°"
-local miniBtn = Instance.new("TextButton")
-miniBtn.Parent = title
-miniBtn.Size = UDim2.new(0,30,1,0)
-miniBtn.Position = UDim2.new(1,-60,0,0)
-miniBtn.Text = "°"
-
-miniBtn.MouseButton1Click:Connect(function()
-	minimized = not minimized
-	for _,v in pairs(main:GetChildren()) do
-		if v ~= title then
-			v.Visible = not minimized
-		end
-	end
-end)
--- ===== AVISO DE FECHAMENTO =====
-local warnFrame = Instance.new("Frame")
-warnFrame.Parent = gui
-warnFrame.Size = UDim2.new(0,300,0,150)
-warnFrame.Position = UDim2.new(0.5,-150,0.5,-75)
-warnFrame.Visible = false
-warnFrame.BackgroundColor3 = Color3.fromRGB(60,60,60)
-
-local warnText = Instance.new("TextLabel")
-warnText.Parent = warnFrame
-warnText.Size = UDim2.new(1,0,0.6,0)
-warnText.Text = "Tem certeza que deseja fechar o script?"
-warnText.TextWrapped = true
-warnText.TextScaled = true
-
-local yesBtn = Instance.new("TextButton")
-yesBtn.Parent = warnFrame
-yesBtn.Size = UDim2.new(0.4,0,0.25,0)
-yesBtn.Position = UDim2.new(0.05,0,0.7,0)
-yesBtn.Text = "SIM / CONTINUAR"
-
-local noBtn = Instance.new("TextButton")
-noBtn.Parent = warnFrame
-noBtn.Size = UDim2.new(0.4,0,0.25,0)
-noBtn.Position = UDim2.new(0.55,0,0.7,0)
-noBtn.Text = "CANCELAR"
-
--- botão "X"
-local exitBtn = Instance.new("TextButton")
-exitBtn.Parent = title
-exitBtn.Size = UDim2.new(0,30,1,0)
-exitBtn.Position = UDim2.new(1,-30,0,0)
-exitBtn.Text = "X"
-
-exitBtn.MouseButton1Click:Connect(function()
-	warnFrame.Visible = true
-end)
-
-noBtn.MouseButton1Click:Connect(function()
-	warnFrame.Visible = false
-end)
--- ===== DESLIGAMENTO TOTAL =====
-local loading = Instance.new("TextLabel")
-loading.Parent = gui
-loading.Size = UDim2.new(1,0,1,0)
-loading.Visible = false
-loading.Text = "Carregando..."
-loading.TextScaled = true
-loading.BackgroundTransparency = 0.3
-
-yesBtn.MouseButton1Click:Connect(function()
-	warnFrame.Visible = false
-	loading.Visible = true
-
-	-- desligar tudo
-	wsOn = false
-	infJump = false
-	spinOn = false
-	invisOn = false
-
-	humanoid.WalkSpeed = 18
-
-	for _,v in pairs(char:GetDescendants()) do
-		if v:IsA("BasePart") then
-			v.Transparency = 0
-		end
-	end
-
-	wait(2)
-
-	gui:Destroy()
-end)
--- ===== MINI MENU FLUTUANTE =====
-local miniFrame = Instance.new("Frame")
-miniFrame.Parent = gui
-miniFrame.Size = UDim2.new(0,120,0,60)
-miniFrame.Position = UDim2.new(1,-140,0.5,-30)
-miniFrame.Active = true
-miniFrame.Draggable = true
-
-local miniOpen = Instance.new("TextButton")
-miniOpen.Parent = miniFrame
-miniOpen.Size = UDim2.new(1,0,0.5,0)
-miniOpen.Text = "ABRIR MENU"
-
-miniOpen.MouseButton1Click:Connect(function()
-	main.Visible = true
-end)
-
-local miniInvis = Instance.new("TextButton")
-miniInvis.Parent = miniFrame
-miniInvis.Position = UDim2.new(0,0,0.5,0)
-miniInvis.Size = UDim2.new(1,0,0.5,0)
-miniInvis.Text = "INVIS OFF"
-
-miniInvis.MouseButton1Click:Connect(function()
-	invisOn = not invisOn
-	miniInvis.Text = invisOn and "INVIS ON" or "INVIS OFF"
-
-	for _,v in pairs(char:GetDescendants()) do
-		if v:IsA("BasePart") then
-			v.Transparency = invisOn and 1 or 0
-		end
-	end
-end)
--- ===== ESP BOX + NOME (COR DO TIME) =====
-local espOn = false
-local espFolder = Instance.new("Folder", gui)
-espFolder.Name = "ESP_BOX"
-
-local espBtn = Instance.new("TextButton")
-espBtn.Parent = main
-espBtn.Position = UDim2.new(0,10,0,210)
-espBtn.Size = UDim2.new(0,120,0,25)
-espBtn.Text = "ESP OFF"
-
-local function clearESP()
-	for _,v in pairs(espFolder:GetChildren()) do
-		v:Destroy()
-	end
-end
-
-local function createESP(plr)
-	if plr == player then return end
-	if not plr.Character then return end
-	if not plr.Character:FindFirstChild("HumanoidRootPart") then return end
-
-	local hrp = plr.Character.HumanoidRootPart
-
-	local box = Instance.new("BoxHandleAdornment")
-	box.Adornee = hrp
-	box.Size = Vector3.new(4,6,2)
-	box.AlwaysOnTop = true
-	box.ZIndex = 10
-	box.Transparency = 0.5
-	box.Parent = espFolder
-
-	-- cor do time
-	if plr.Team and plr.Team.TeamColor then
-		box.Color3 = plr.Team.TeamColor.Color
-	else
-		box.Color3 = Color3.new(1,1,1)
-	end
-
-	local nameGui = Instance.new("BillboardGui")
-	nameGui.Adornee = hrp
-	nameGui.Size = UDim2.new(0,100,0,30)
-	nameGui.StudsOffset = Vector3.new(0,4,0)
-	nameGui.AlwaysOnTop = true
-	nameGui.Parent = espFolder
-
-	local nameLabel = Instance.new("TextLabel")
-	nameLabel.Parent = nameGui
-	nameLabel.Size = UDim2.new(1,0,1,0)
-	nameLabel.BackgroundTransparency = 1
-	nameLabel.Text = plr.Name
-	nameLabel.TextScaled = true
-	nameLabel.TextColor3 = box.Color3
-	nameLabel.TextStrokeTransparency = 0
-end
-
-espBtn.MouseButton1Click:Connect(function()
-	espOn = not espOn
-	espBtn.Text = espOn and "ESP ON" or "ESP OFF"
-	clearESP()
-
-	if espOn then
-		for _,plr in pairs(Players:GetPlayers()) do
-			createESP(plr)
-		end
-	end
-end)
-
-Players.PlayerAdded:Connect(function(plr)
-	if espOn then
-		plr.CharacterAdded:Wait()
-		task.wait(1)
-		createESP(plr)
-	end
-end)
--- ===== NOCLIP =====
-local noclipOn = false
-
-local noclipBtn = Instance.new("TextButton")
-noclipBtn.Parent = main
-noclipBtn.Position = UDim2.new(0,10,0,250)
-noclipBtn.Size = UDim2.new(0,120,0,25)
-noclipBtn.Text = "NOCLIP OFF"
-
-noclipBtn.MouseButton1Click:Connect(function()
-	noclipOn = not noclipOn
-	noclipBtn.Text = noclipOn and "NOCLIP ON" or "NOCLIP OFF"
-end)
-
-RunService.Stepped:Connect(function()
-	if noclipOn and char then
-		for _,v in pairs(char:GetDescendants()) do
-			if v:IsA("BasePart") then
-				v.CanCollide = false
-			end
-		end
-	end
-end)
--- ===== SISTEMA SIMPLES DE ABAS =====
-local tabs = {}
-local currentTab
-
-local function criarAba(nome, posX)
-    -- botão da aba
-    local btn = Instance.new("TextButton")
-    btn.Parent = main
-    btn.Size = UDim2.new(0,100,0,25)
-    btn.Position = UDim2.new(0,posX,0,35)
-    btn.Text = nome
-
-    -- frame da aba
-    local frame = Instance.new("Frame")
-    frame.Parent = main
-    frame.Size = UDim2.new(1,0,1,-70)
-    frame.Position = UDim2.new(0,0,0,65)
-    frame.BackgroundTransparency = 1
-    frame.Visible = false
-
-    btn.MouseButton1Click:Connect(function()
-        -- esconde aba anterior
-        if currentTab then
-            currentTab.Visible = false
+-- AÇÃO DO BOTÃO MINIMIZAR
+minimizeBtn.MouseButton1Click:Connect(function()
+    for _,v in pairs(main:GetChildren()) do
+        if v:IsA("Frame") and v ~= title then
+            v.Visible = not v.Visible
         end
-        frame.Visible = true
-        currentTab = frame
-    end)
+    end
+end)
 
-    tabs[nome] = frame
-    return frame
-end
-
--- criando abas
-local tabPrincipal = criarAba("Principal", 10)
-local tabMovimento = criarAba("Movimento", 120)
-local tabVisual = criarAba("Visual", 230)
-
--- aba inicial visível
-tabPrincipal.Visible = true
-currentTab = tabPrincipal
+-- AÇÃO DO BOTÃO FECHAR
+closeBtn.MouseButton1Click:Connect(function()
+    main.Visible = false
+    menuBtn.Visible = false
+    for _,v in pairs(char:GetDescendants()) do
+        if v:IsA("BasePart") then
+            v.Transparency = 0
+            v.CanCollide = true
+        end
+    end
+    humanoid.WalkSpeed = 18
+end)
