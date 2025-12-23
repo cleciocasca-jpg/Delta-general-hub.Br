@@ -443,3 +443,126 @@ Players.PlayerAdded:Connect(function(plr)
         createESP(plr)
     end
 end)SUAL OK", 10)
+-- ===== PARTE 4 — VISUAL MODERNO =====
+
+-- Função para aplicar hover nos botões
+local function addHoverEffect(btn)
+    btn.MouseEnter:Connect(function()
+        btn.BackgroundColor3 = Color3.fromRGB(100,100,100)
+    end)
+    btn.MouseLeave:Connect(function()
+        -- Volta para cor normal ou ativa
+        if currentTab and tabs[btn.Text] == currentTab then
+            btn.BackgroundColor3 = Color3.fromRGB(80,80,80)
+        else
+            btn.BackgroundColor3 = Color3.fromRGB(50,50,50)
+        end
+    end)
+end
+
+-- Aplicar hover nas abas
+for nome,frame in pairs(tabs) do
+    for _,v in pairs(main:GetChildren()) do
+        if v:IsA("TextButton") and v.Text == nome then
+            addHoverEffect(v)
+        end
+    end
+end
+
+-- Função para arredondar os botões
+local function arredondar(btn)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0,8)
+    corner.Parent = btn
+end
+
+-- Arredondar todas as abas
+for nome,frame in pairs(tabs) do
+    for _,v in pairs(main:GetChildren()) do
+        if v:IsA("TextButton") and v.Text == nome then
+            arredondar(v)
+        end
+    end
+end
+
+-- Arredondar todos os botões dentro das abas
+for _,tab in pairs(tabs) do
+    for _,v in pairs(tab:GetChildren()) do
+        if v:IsA("TextButton") then
+            arredondar(v)
+        end
+    end
+end
+
+-- Melhorar título
+title.BackgroundColor3 = Color3.fromRGB(40,40,40)
+title.TextColor3 = Color3.new(1,1,1)
+title.BorderSizePixel = 0
+local titleCorner = Instance.new("UICorner")
+titleCorner.CornerRadius = UDim.new(0,8)
+titleCorner.Parent = title
+
+-- Botão de fechar '×'
+local closeBtn = Instance.new("TextButton")
+closeBtn.Parent = main
+closeBtn.Size = UDim2.new(0,30,0,30)
+closeBtn.Position = UDim2.new(1,-40,0,0)
+closeBtn.Text = "×"
+closeBtn.TextColor3 = Color3.new(1,0,0)
+closeBtn.BackgroundTransparency = 0
+closeBtn.BackgroundColor3 = Color3.fromRGB(50,50,50)
+arredondar(closeBtn)
+addHoverEffect(closeBtn)
+
+closeBtn.MouseButton1Click:Connect(function()
+    -- Aviso de confirmação
+    local aviso = Instance.new("Frame")
+    aviso.Size = UDim2.new(0,250,0,120)
+    aviso.Position = UDim2.new(0.5,-125,0.5,-60)
+    aviso.BackgroundColor3 = Color3.fromRGB(30,30,30)
+    aviso.Parent = gui
+    arredondar(aviso)
+
+    local label = Instance.new("TextLabel")
+    label.Parent = aviso
+    label.Size = UDim2.new(1,0,0,50)
+    label.Position = UDim2.new(0,0,0,10)
+    label.BackgroundTransparency = 1
+    label.Text = "Deseja realmente fechar o hub?\nTodas funções serão desativadas"
+    label.TextScaled = true
+    label.TextColor3 = Color3.new(1,1,1)
+
+    local yesBtn = Instance.new("TextButton")
+    yesBtn.Parent = aviso
+    yesBtn.Size = UDim2.new(0,100,0,30)
+    yesBtn.Position = UDim2.new(0,20,0,70)
+    yesBtn.Text = "SIM"
+    arredondar(yesBtn)
+    addHoverEffect(yesBtn)
+
+    local noBtn = Instance.new("TextButton")
+    noBtn.Parent = aviso
+    noBtn.Size = UDim2.new(0,100,0,30)
+    noBtn.Position = UDim2.new(0,130,0,70)
+    noBtn.Text = "CANCELAR"
+    arredondar(noBtn)
+    addHoverEffect(noBtn)
+
+    yesBtn.MouseButton1Click:Connect(function()
+        aviso:Destroy()
+        gui:Destroy()
+        -- Resetar funções
+        humanoid.WalkSpeed = 18
+        humanoid.JumpPower = 50
+        for _,v in pairs(char:GetDescendants()) do
+            if v:IsA("BasePart") then
+                v.Transparency = 0
+                v.CanCollide = true
+            end
+        end
+    end)
+
+    noBtn.MouseButton1Click:Connect(function()
+        aviso:Destroy()
+    end)
+end)
