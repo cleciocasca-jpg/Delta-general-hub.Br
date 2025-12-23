@@ -607,3 +607,20 @@ RunService.RenderStepped:Connect(function(dt)
         miniFrame.BackgroundTransparency = miniFrame.BackgroundTransparency + 0.05
     end
 end)
+-- ===== PARTE 6 — LOADSTRING =====
+-- Para usar no Delta Executor ou qualquer executor compatível
+
+local function iniciarScript()
+    -- Aqui você copia todas as Partes anteriores
+    -- Parte 1: GUI + Menu
+    -- Parte 2: Sistema de Abas
+    -- Parte 3: Funções (WalkSpeed, Pulo, Giro, Noclip, Invis, ESP)
+    -- Parte 4: Fechamento / Avisos
+    -- Parte 5: Visual / Animações
+
+    -- Exemplo resumido de como usar loadstring no GitHub:
+    -- loadstring(game:HttpGet("https://raw.githubusercontent.com/seu-usuario/seu-repo/main/Delta-general-hub.lua"))()
+end
+
+-- Executar script
+iniciarScript()
