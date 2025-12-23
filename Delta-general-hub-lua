@@ -44,3 +44,50 @@ title.TextScaled = true
 menuBtn.MouseButton1Click:Connect(function()
 	main.Visible = not main.Visible
 end)
+-- ===== WALKSPEED =====
+local wsOn = false
+
+local wsBox = Instance.new("TextBox")
+wsBox.Parent = main
+wsBox.Position = UDim2.new(0,10,0,50)
+wsBox.Size = UDim2.new(0,100,0,25)
+wsBox.Text = "18"
+
+local wsBtn = Instance.new("TextButton")
+wsBtn.Parent = main
+wsBtn.Position = UDim2.new(0,120,0,50)
+wsBtn.Size = UDim2.new(0,80,0,25)
+wsBtn.Text = "OFF"
+
+wsBtn.MouseButton1Click:Connect(function()
+	wsOn = not wsOn
+	wsBtn.Text = wsOn and "ON" or "OFF"
+end)
+
+RunService.RenderStepped:Connect(function()
+	if wsOn then
+		humanoid.WalkSpeed = tonumber(wsBox.Text) or 18
+	else
+		humanoid.WalkSpeed = 18
+	end
+end)
+
+-- ===== PULO INFINITO =====
+local infJump = false
+
+local jumpBtn = Instance.new("TextButton")
+jumpBtn.Parent = main
+jumpBtn.Position = UDim2.new(0,10,0,90)
+jumpBtn.Size = UDim2.new(0,120,0,25)
+jumpBtn.Text = "PULO OFF"
+
+jumpBtn.MouseButton1Click:Connect(function()
+	infJump = not infJump
+	jumpBtn.Text = infJump and "PULO ON" or "PULO OFF"
+end)
+
+UIS.JumpRequest:Connect(function()
+	if infJump then
+		humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+	end
+end)
