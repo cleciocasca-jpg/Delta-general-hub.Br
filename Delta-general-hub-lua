@@ -91,3 +91,74 @@ UIS.JumpRequest:Connect(function()
 		humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
 	end
 end)
+-- ===== GIRO VELOZ =====
+local spinOn = false
+
+local spinBox = Instance.new("TextBox")
+spinBox.Parent = main
+spinBox.Position = UDim2.new(0,10,0,130)
+spinBox.Size = UDim2.new(0,100,0,25)
+spinBox.Text = "1"
+
+local spinBtn = Instance.new("TextButton")
+spinBtn.Parent = main
+spinBtn.Position = UDim2.new(0,120,0,130)
+spinBtn.Size = UDim2.new(0,80,0,25)
+spinBtn.Text = "OFF"
+
+spinBtn.MouseButton1Click:Connect(function()
+	spinOn = not spinOn
+	spinBtn.Text = spinOn and "ON" or "OFF"
+end)
+
+RunService.RenderStepped:Connect(function(dt)
+	if spinOn then
+		local speed = tonumber(spinBox.Text) or 1
+		root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(360 * speed * dt), 0)
+	end
+end)
+
+-- ===== INVISIBILIDADE =====
+local invisOn = false
+local savedCFrame
+
+local invisBtn = Instance.new("TextButton")
+invisBtn.Parent = main
+invisBtn.Position = UDim2.new(0,10,0,170)
+invisBtn.Size = UDim2.new(0,120,0,25)
+invisBtn.Text = "INVIS OFF"
+
+local axBtn = Instance.new("TextButton")
+axBtn.Parent = main
+axBtn.Position = UDim2.new(0,140,0,170)
+axBtn.Size = UDim2.new(0,50,0,25)
+axBtn.Text = "AX"
+
+local bxBtn = Instance.new("TextButton")
+bxBtn.Parent = main
+bxBtn.Position = UDim2.new(0,200,0,170)
+bxBtn.Size = UDim2.new(0,50,0,25)
+bxBtn.Text = "BX"
+
+invisBtn.MouseButton1Click:Connect(function()
+	invisOn = not invisOn
+	invisBtn.Text = invisOn and "INVIS ON" or "INVIS OFF"
+
+	for _,v in pairs(char:GetDescendants()) do
+		if v:IsA("BasePart") then
+			v.Transparency = invisOn and 1 or 0
+		end
+	end
+end)
+
+axBtn.MouseButton1Click:Connect(function()
+	if invisOn then
+		savedCFrame = root.CFrame
+	end
+end)
+
+bxBtn.MouseButton1Click:Connect(function()
+	if invisOn and savedCFrame then
+		root.CFrame = savedCFrame
+	end
+end)
