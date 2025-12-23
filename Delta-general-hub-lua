@@ -1,234 +1,158 @@
 -- SCRIPT GERAL BR 1.00 (BETA)
--- Compatível com Delta Executor
--- NÃO EDITAR
+-- Feito para Delta Executor
 
--- ===== SERVIÇOS =====
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
 local player = Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local humanoid = char:WaitForChild("Humanoid")
+local root = char:WaitForChild("HumanoidRootPart")
 
--- ===== GUI =====
+-- GUI
 local gui = Instance.new("ScreenGui")
 gui.Name = "DeltaGeralHub"
 gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
--- Botão MENU pequeno
+-- BOTÃO MENU PEQUENO
 local menuBtn = Instance.new("TextButton")
 menuBtn.Parent = gui
-menuBtn.Size = UDim2.new(0, 80, 0, 30)
-menuBtn.Position = UDim2.new(0, 20, 0, 200)
+menuBtn.Size = UDim2.new(0,80,0,30)
+menuBtn.Position = UDim2.new(0,20,0,200)
 menuBtn.Text = "MENU"
-menuBtn.BackgroundColor3 = Color3.fromRGB(140,140,140)
-menuBtn.BorderSizePixel = 2
 menuBtn.Active = true
 menuBtn.Draggable = true
 
--- Menu principal
+-- MENU PRINCIPAL
 local main = Instance.new("Frame")
 main.Parent = gui
-main.Size = UDim2.new(0, 340, 0, 330)
-main.Position = UDim2.new(0.5, -170, 0.5, -165)
-main.BackgroundColor3 = Color3.fromRGB(180,180,180)
-main.BorderSizePixel = 2
+main.Size = UDim2.new(0,340,0,320)
+main.Position = UDim2.new(0.5,-170,0.5,-160)
 main.Visible = false
 main.Active = true
 main.Draggable = true
 
--- Título
+-- TÍTULO
 local title = Instance.new("TextLabel")
 title.Parent = main
-title.Size = UDim2.new(1, 0, 0, 30)
-title.Text = "SCRIPT GERAL BR 1.00 (BETA)"
+title.Size = UDim2.new(1,0,0,30)
+title.Text = "SCRIPT GERAL BR 1.00 (BETA)   -   °   ×"
 title.TextScaled = true
-title.BackgroundColor3 = Color3.fromRGB(150,150,150)
-title.BorderSizePixel = 1
 
--- Botões do título
-local btnMin = Instance.new("TextButton", title)
-btnMin.Size = UDim2.new(0, 30, 1, 0)
-btnMin.Position = UDim2.new(1, -90, 0, 0)
-btnMin.Text = "-"
+-- FUNÇÃO ABRIR MENU
+menuBtn.MouseButton1Click:Connect(function()
+	main.Visible = not main.Visible
+end)
 
-local btnHide = Instance.new("TextButton", title)
-btnHide.Size = UDim2.new(0, 30, 1, 0)
-btnHide.Position = UDim2.new(1, -60, 0, 0)
-btnHide.Text = "°"
-
-local btnClose = Instance.new("TextButton", title)
-btnClose.Size = UDim2.new(0, 30, 1, 0)
-btnClose.Position = UDim2.new(1, -30, 0, 0)
-btnClose.Text = "X"
-
--- Conteúdo
-local content = Instance.new("Frame")
-content.Parent = main
-content.Size = UDim2.new(1, 0, 1, -30)
-content.Position = UDim2.new(0, 0, 0, 30)
-content.BackgroundTransparency = 1
-
--- ===== PERSONAGEM =====
-local humanoid
-local function getHumanoid()
-    local char = player.Character or player.CharacterAdded:Wait()
-    humanoid = char:WaitForChild("Humanoid")
-end
-getHumanoid()
-player.CharacterAdded:Connect(getHumanoid)
-
--- ===== WALKSPEED =====
+-- ================= WALK SPEED =================
 local wsOn = false
-
-local wsBox = Instance.new("TextBox", content)
-wsBox.Size = UDim2.new(0, 60, 0, 25)
-wsBox.Position = UDim2.new(0, 20, 0, 20)
+local wsBox = Instance.new("TextBox", main)
+wsBox.Position = UDim2.new(0,10,0,50)
+wsBox.Size = UDim2.new(0,100,0,25)
 wsBox.Text = "18"
 
-local wsBtn = Instance.new("TextButton", content)
-wsBtn.Size = UDim2.new(0, 160, 0, 25)
-wsBtn.Position = UDim2.new(0, 90, 0, 20)
-wsBtn.Text = "WALKSPEED OFF"
+local wsBtn = Instance.new("TextButton", main)
+wsBtn.Position = UDim2.new(0,120,0,50)
+wsBtn.Size = UDim2.new(0,80,0,25)
+wsBtn.Text = "OFF"
 
 wsBtn.MouseButton1Click:Connect(function()
-    wsOn = not wsOn
-    wsBtn.Text = wsOn and "WALKSPEED ON" or "WALKSPEED OFF"
+	wsOn = not wsOn
+	wsBtn.Text = wsOn and "ON" or "OFF"
 end)
 
-RunService.Heartbeat:Connect(function()
-    if wsOn and humanoid then
-        humanoid.WalkSpeed = tonumber(wsBox.Text) or 18
-    end
+RunService.RenderStepped:Connect(function()
+	if wsOn then
+		humanoid.WalkSpeed = tonumber(wsBox.Text) or 18
+	else
+		humanoid.WalkSpeed = 18
+	end
 end)
 
--- ===== PULO INFINITO =====
+-- ================= PULO INFINITO =================
 local infJump = false
-
-local jumpBtn = Instance.new("TextButton", content)
-jumpBtn.Size = UDim2.new(0, 240, 0, 25)
-jumpBtn.Position = UDim2.new(0, 20, 0, 60)
-jumpBtn.Text = "PULO INFINITO OFF"
+local jumpBtn = Instance.new("TextButton", main)
+jumpBtn.Position = UDim2.new(0,10,0,90)
+jumpBtn.Size = UDim2.new(0,80,0,25)
+jumpBtn.Text = "PULO OFF"
 
 jumpBtn.MouseButton1Click:Connect(function()
-    infJump = not infJump
-    jumpBtn.Text = infJump and "PULO INFINITO ON" or "PULO INFINITO OFF"
+	infJump = not infJump
+	jumpBtn.Text = infJump and "PULO ON" or "PULO OFF"
 end)
 
 UIS.JumpRequest:Connect(function()
-    if infJump and humanoid then
-        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-    end
+	if infJump then
+		humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+	end
 end)
 
--- ===== GIRO VELOZ =====
+-- ================= GIRO VELOZ =================
 local spinOn = false
+local spinSpeed = 1
 
-local spinBox = Instance.new("TextBox", content)
-spinBox.Size = UDim2.new(0, 60, 0, 25)
-spinBox.Position = UDim2.new(0, 20, 0, 100)
+local spinBox = Instance.new("TextBox", main)
+spinBox.Position = UDim2.new(0,10,0,130)
+spinBox.Size = UDim2.new(0,100,0,25)
 spinBox.Text = "1"
 
-local spinBtn = Instance.new("TextButton", content)
-spinBtn.Size = UDim2.new(0, 160, 0, 25)
-spinBtn.Position = UDim2.new(0, 90, 0, 100)
-spinBtn.Text = "GIRO OFF"
+local spinBtn = Instance.new("TextButton", main)
+spinBtn.Position = UDim2.new(0,120,0,130)
+spinBtn.Size = UDim2.new(0,80,0,25)
+spinBtn.Text = "OFF"
 
 spinBtn.MouseButton1Click:Connect(function()
-    spinOn = not spinOn
-    spinBtn.Text = spinOn and "GIRO ON" or "GIRO OFF"
+	spinOn = not spinOn
+	spinBtn.Text = spinOn and "ON" or "OFF"
 end)
 
-RunService.Heartbeat:Connect(function(dt)
-    if spinOn and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-        local hrp = player.Character.HumanoidRootPart
-        local speed = tonumber(spinBox.Text) or 1
-        hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(360 * speed * dt), 0)
-    end
+RunService.RenderStepped:Connect(function(dt)
+	if spinOn then
+		spinSpeed = tonumber(spinBox.Text) or 1
+		root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(360 * spinSpeed * dt), 0)
+	end
 end)
 
--- ===== INVISIBILIDADE =====
-local invOn = false
-local axPos
+-- ================= INVISIBILIDADE =================
+local invisOn = false
+local savedCFrame
 
-local invFrame = Instance.new("Frame")
-invFrame.Parent = gui
-invFrame.Size = UDim2.new(0, 160, 0, 130)
-invFrame.Position = UDim2.new(0, 20, 0, 250)
-invFrame.BackgroundColor3 = Color3.fromRGB(160,160,160)
-invFrame.BorderSizePixel = 2
-invFrame.Visible = false
-invFrame.Active = true
-invFrame.Draggable = true
+local invisBtn = Instance.new("TextButton", main)
+invisBtn.Position = UDim2.new(0,10,0,170)
+invisBtn.Size = UDim2.new(0,100,0,25)
+invisBtn.Text = "INVIS OFF"
 
-local invBtn = Instance.new("TextButton", content)
-invBtn.Size = UDim2.new(0, 240, 0, 25)
-invBtn.Position = UDim2.new(0, 20, 0, 140)
-invBtn.Text = "INVISIBILIDADE OFF"
+local axBtn = Instance.new("TextButton", main)
+axBtn.Position = UDim2.new(0,120,0,170)
+axBtn.Size = UDim2.new(0,50,0,25)
+axBtn.Text = "AX"
 
-local ativarBtn = Instance.new("TextButton", invFrame)
-ativarBtn.Size = UDim2.new(1, -10, 0, 25)
-ativarBtn.Position = UDim2.new(0, 5, 0, 5)
-ativarBtn.Text = "ATIVAR"
+local bxBtn = Instance.new("TextButton", main)
+bxBtn.Position = UDim2.new(0,180,0,170)
+bxBtn.Size = UDim2.new(0,50,0,25)
+bxBtn.Text = "BX"
 
-local axBtn = Instance.new("TextButton", invFrame)
-axBtn.Size = UDim2.new(1, -10, 0, 25)
-axBtn.Position = UDim2.new(0, 5, 0, 40)
-axBtn.Text = "AX (voltar)"
+invisBtn.MouseButton1Click:Connect(function()
+	invisOn = not invisOn
+	invisBtn.Text = invisOn and "INVIS ON" or "INVIS OFF"
 
-local bxBtn = Instance.new("TextButton", invFrame)
-bxBtn.Size = UDim2.new(1, -10, 0, 25)
-bxBtn.Position = UDim2.new(0, 5, 0, 75)
-bxBtn.Text = "BX (ficar)"
-
-invBtn.MouseButton1Click:Connect(function()
-    invFrame.Visible = not invFrame.Visible
-end)
-
-ativarBtn.MouseButton1Click:Connect(function()
-    invOn = not invOn
-    invBtn.Text = invOn and "INVISIBILIDADE ON" or "INVISIBILIDADE OFF"
-
-    if invOn and player.Character then
-        axPos = player.Character.HumanoidRootPart.CFrame
-        for _,v in pairs(player.Character:GetDescendants()) do
-            if v:IsA("BasePart") then
-                v.Transparency = 1
-                v.CanCollide = false
-            end
-        end
-    else
-        for _,v in pairs(player.Character:GetDescendants()) do
-            if v:IsA("BasePart") then
-                v.Transparency = 0
-                v.CanCollide = true
-            end
-        end
-    end
+	for _,v in pairs(char:GetDescendants()) do
+		if v:IsA("BasePart") then
+			v.Transparency = invisOn and 1 or 0
+		end
+	end
 end)
 
 axBtn.MouseButton1Click:Connect(function()
-    if axPos and player.Character then
-        player.Character.HumanoidRootPart.CFrame = axPos
-    end
+	if invisOn then
+		savedCFrame = root.CFrame
+	end
 end)
 
-bxBtn.MouseButton1Click:Connect(function() end)
-
--- ===== CONTROLES =====
-menuBtn.MouseButton1Click:Connect(function()
-    main.Visible = not main.Visible
-end)
-
-btnHide.MouseButton1Click:Connect(function()
-    content.Visible = not content.Visible
-end)
-
-btnMin.MouseButton1Click:Connect(function()
-    main.Visible = false
-end)
-
-btnClose.MouseButton1Click:Connect(function()
-    if humanoid then humanoid.WalkSpeed = 18 end
-    gui:Destroy()
+bxBtn.MouseButton1Click:Connect(function()
+	if invisOn and savedCFrame then
+		root.CFrame = savedCFrame
+	end
 end)
