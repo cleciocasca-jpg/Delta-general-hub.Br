@@ -232,3 +232,34 @@ end)
 noBtn.MouseButton1Click:Connect(function()
 	warnFrame.Visible = false
 end)
+-- ===== DESLIGAMENTO TOTAL =====
+local loading = Instance.new("TextLabel")
+loading.Parent = gui
+loading.Size = UDim2.new(1,0,1,0)
+loading.Visible = false
+loading.Text = "Carregando..."
+loading.TextScaled = true
+loading.BackgroundTransparency = 0.3
+
+yesBtn.MouseButton1Click:Connect(function()
+	warnFrame.Visible = false
+	loading.Visible = true
+
+	-- desligar tudo
+	wsOn = false
+	infJump = false
+	spinOn = false
+	invisOn = false
+
+	humanoid.WalkSpeed = 18
+
+	for _,v in pairs(char:GetDescendants()) do
+		if v:IsA("BasePart") then
+			v.Transparency = 0
+		end
+	end
+
+	wait(2)
+
+	gui:Destroy()
+end)
