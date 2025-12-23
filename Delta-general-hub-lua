@@ -162,3 +162,32 @@ bxBtn.MouseButton1Click:Connect(function()
 		root.CFrame = savedCFrame
 	end
 end)
+-- ===== CONTROLES DO TÍTULO =====
+local minimized = false
+
+-- botão "-"
+local closeBtn = Instance.new("TextButton")
+closeBtn.Parent = title
+closeBtn.Size = UDim2.new(0,30,1,0)
+closeBtn.Position = UDim2.new(1,-90,0,0)
+closeBtn.Text = "-"
+
+closeBtn.MouseButton1Click:Connect(function()
+	main.Visible = false
+end)
+
+-- botão "°"
+local miniBtn = Instance.new("TextButton")
+miniBtn.Parent = title
+miniBtn.Size = UDim2.new(0,30,1,0)
+miniBtn.Position = UDim2.new(1,-60,0,0)
+miniBtn.Text = "°"
+
+miniBtn.MouseButton1Click:Connect(function()
+	minimized = not minimized
+	for _,v in pairs(main:GetChildren()) do
+		if v ~= title then
+			v.Visible = not minimized
+		end
+	end
+end)
